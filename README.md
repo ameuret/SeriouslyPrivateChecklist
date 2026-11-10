@@ -14,7 +14,7 @@ A seriously **private**, **serverless** checklist you **share** with a simple li
 
 🔀 The address bar is always a complete, ready-to-send copy of your checklist.
 
-🤝 Sharing never touches your locally-stored list — the URL is a copy, not a move.
+🔗 The list lives **only in the URL** — nothing is ever written to cookies or storage on your device.
 
 
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](https://unlicense.org)
@@ -29,7 +29,7 @@ A seriously **private**, **serverless** checklist you **share** with a simple li
   to any server. Copy the address bar, paste it anywhere, done.
 - 🔒 **Optional private sharing** — encrypt the link with a passphrase (AES-256-GCM via WebCrypto).
   Only people with the passphrase can read the list.
-- 💾 **Autosaves locally** — everything persists in `localStorage` *and* in the URL; works fully offline once loaded.
+- 🌐 **Lives in the URL** — the fragment is the only storage; nothing touches cookies or localStorage; works fully offline once loaded.
 - 📏 **URL length awareness** — compressed encoding keeps links short, with warnings if a link
   gets too long for some messengers.
 - 📋 **Export** — copy the list as Markdown or download it as a `.md` file.
@@ -48,10 +48,11 @@ Open a link and the list appears; open an encrypted one and you'll be asked for 
 
 - **Zero server-side anything.** Static files only; there is no backend to breach, subpoena, or trust.
 - **No cookies, no analytics, no third-party requests, no external assets.**
+- **No localStorage either** — the URL fragment is the only storage, so private/incognito modes behave identically (no site data lingering after the session).
 - **Fragments are never transmitted** in HTTP requests — only the page path is.
 - **Optional end-to-end encryption** for links you send (fresh salt + IV per share; the
   passphrase is never stored or sent).
-- **Minimal supply-chain surface.** Zero runtime dependencies — there is almost nothing to audit or update.
+- **Responsible supply chain defense policy.** Reputable dependencies with update cooldowns.
 - **Honest residual risks:**
   - a link can end up in browser history -> use private navigation
   - a link can linger in your clipboard -> review your OS settings
@@ -84,35 +85,13 @@ long fragments (Chrome/Firefox up to ~2 MB, Safari historically ~64 KB). The rea
 The app compresses the list before encoding (typically −60–70 %) and warns you when a link gets
 long — with a one-click "Copy as Markdown" fallback.
 
-## Run it
-
-It's a static site — no build step, no dependencies:
-
-```bash
-git clone https://github.com/ameuret/SeriouslyPrivateChecklist.git
-cd SeriouslyPrivateChecklist
-# serve the folder with any static server, e.g.:
-python3 -m http.server 8000
-# then open http://localhost:8000
-```
-
-Or use the hosted version on GitHub Pages (free):
-👉 **[ameuret.github.io/SeriouslyPrivateChecklist](https://ameuret.github.io/SeriouslyPrivateChecklist/)**
-(enable it via *Settings → Pages → Deploy from branch: main*).
-Encryption and compression require a secure context (HTTPS or `localhost`).
-
-## Status
-
-📝 **Requirements & design phase** — the full functional and non-functional requirements
-(privacy model, URL-length limits, security, scope) are in
-[**REQUIREMENTS.md**](REQUIREMENTS.md). Implementation follows that document.
-
 ## Tech approach
 
-Vanilla HTML/CSS/JS, no framework, no runtime dependencies: `localStorage` for persistence,
-live `history.replaceState` for fragment sync, CompressionStream (deflate) + base64url for
-encoding, WebCrypto (PBKDF2-SHA-256 → AES-256-GCM) for private links, strict CSP, and
-XSS-safe DOM rendering only.
+Vanilla HTML/CSS/JS, no framework: the URL fragment is the only storage (live
+`history.replaceState` sync), compression + base64url for encoding (built-in
+CompressionStream today; a small compression library may be vendored later under the
+supply-chain policy above), WebCrypto (PBKDF2-SHA-256 → AES-256-GCM) for private links,
+strict CSP, and XSS-safe DOM rendering only.
 
 ## Contributing
 

@@ -24,9 +24,9 @@ Gap analysis of the closest existing candidate, <https://onlinenotepad.net/todo/
 ## 2. Product summary
 
 A single-page, dependency-free web app. The checklist **is a Markdown document** (task list
-syntax), stored in `localStorage` for persistence **and mirrored live into the URL fragment**
-(`#…`), so the address bar is always a complete, shareable link. No account, no server-side
-storage, no tracking.
+syntax), encoded **live into the URL fragment** (`#…`) — the fragment is the *only* storage,
+so the address bar is always a complete, shareable link. No account, no server-side storage,
+no cookies, no localStorage, no tracking.
 
 ## 3. Definitions
 
@@ -43,9 +43,9 @@ storage, no tracking.
 | F1 | Render Markdown checklist | Lines `- [ ]` render as an unchecked box; `- [x]` / `- [X]` render as done ✅ with strikethrough. Other Markdown lines (headings, plain text) render as formatted text. |
 | F2 | Markdown is the source of truth | Ticking a box rewrites the underlying line from `- [ ]` to `- [x]` (and back). Users can view/edit the raw Markdown directly. |
 | F3 | Basic editing | Add item, delete item, reorder items (move up/down). Every change updates the Markdown. |
-| F4 | Local persistence | Every change is autosaved to `localStorage`. On load with an empty fragment, the saved list is restored. |
-| F5 | Live fragment sync | The URL fragment always reflects the current list (via `history.replaceState`, no history spam). Copying the address bar always yields a working share link. Generating or sharing a link is **non-destructive**: it never deletes or alters the locally stored list. |
-| F6 | Open a shared link | Opening a URL with a fragment loads that list (fragment takes precedence) and saves it locally. |
+| F4 | URL-only state | No cookies, no localStorage, no session storage — the fragment is the single source of truth in the browser. Reloading with an empty fragment starts an empty list. Behavior is identical in private/incognito modes. |
+| F5 | Live fragment sync | The URL fragment always reflects the current list (via `history.replaceState`, no history spam). Copying the address bar always yields a working share link. There is no local copy — nothing is persisted outside the URL. |
+| F6 | Open a shared link | Opening a URL with a fragment loads that list into the editor and the fragment. |
 | F7 | Share privately | "Share privately" prompts for a passphrase, encrypts the Markdown (PBKDF2-SHA-256, ≥ 600 000 iterations, random 16-byte salt, random 12-byte IV, AES-256-GCM), and puts `#e1.<base64url(salt‖iv‖ciphertext)>` in the fragment. Recipients are prompted for the passphrase; a wrong passphrase yields a clear error and no partial output. |
 | F8 | Plain share format | Plain links use `#d1.<base64url(deflate-raw(markdown))>` (compressed with the CompressionStream API before encoding to keep URLs short). The `d1`/`e1` prefixes version the format. |
 | F9 | URL length indicator | The UI shows the current fragment length. Soft warning above ~2 000 chars (many messengers truncate long links), hard warning above ~8 000 chars, error if the browser refuses the URL — the list keeps working locally regardless. |
@@ -59,6 +59,8 @@ storage, no tracking.
 
 - **N1 — Serverless:** the app is static files only. There is no backend, no database, no API.
   The fragment is never transmitted to any server (HTTP fragments are client-side by spec).
+  No cookies and no localStorage are used at all, so behavior is identical in
+  private/incognito modes, where storage is restricted or lingers after the session closes.
 - **N2 — No telemetry:** no analytics, no trackers, no cookies, no fingerprinting, no external fonts/CDN.
 - **N3 — Optional end-to-end encryption** for sharing (F7). The passphrase is never stored,
   never sent anywhere, and never logged.
@@ -72,9 +74,9 @@ storage, no tracking.
 ### 5.2 Economy
 
 - **N5 — Zero marginal cost:** hostable on any static host. Canonical deployment target is the
-  free GitHub Pages tier at <https://ameuret.github.io/SeriouslyPrivateChecklist/> (enable via
-  *Settings → Pages → Deploy from branch: main*). No build step, no runtime dependencies
-  (minimal supply-chain surface), no paid services.
+  free GitHub Pages tier at <https://ameuret.github.io/SeriouslyPrivateChecklist/> (activated).
+  No build step, no runtime dependencies today (a compression library may be vendored later
+  under the responsible supply-chain policy), no paid services.
 
 ### 5.3 Security
 
@@ -116,17 +118,17 @@ browser extensions; sync across devices.
 ## 7. Open risks
 
 - Long lists shared through truncating messengers → mitigated by F8 compression + F9 warnings + F10 Markdown fallback.
-- Opening a shared link overwrites the recipient's locally saved list → v1 behavior is "fragment wins"; documented in the README, revisit (merge/diff prompt) if users ask. The share action itself is always non-destructive for the sender (F5).
+- URL-only storage means closing the tab without copying the link loses the list → mitigated by the always-visible address bar and a persistent "Copy link" action; documented in the README.
 - Passphrase loss → unrecoverable by design; documented.
 
 ## 8. Decision log
 
 | Decision | Source |
 |---|---|
-| Hybrid storage: `localStorage` autosave + live URL-fragment sync | owner interview |
+| Storage is **URL-fragment-only** — supersedes the initial hybrid localStorage+fragment idea: private navigation modes restrict cookies/localStorage yet let them linger after the session, so no storage is used at all | owner review after enabling GitHub Pages |
 | Passphrase encryption is optional, not mandatory | owner interview |
 | The Markdown document is the literal source of truth | owner interview |
 | v1 scope: single-document checklist; no accounts, reminders, or multiple named lists | owner interview |
-| Canonical host: GitHub Pages at <https://ameuret.github.io/SeriouslyPrivateChecklist/> | owner review of README |
+| Canonical host: GitHub Pages at <https://ameuret.github.io/SeriouslyPrivateChecklist/> — activated | owner, after enabling Pages |
 | Sharing is non-destructive for the sender's local list (corrects a draft README claim that sharing would wipe local data) | owner review of README |
 | README documents private-navigation (incognito) guidance and AI-assistance transparency | owner review of README |
