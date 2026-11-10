@@ -1,5 +1,8 @@
 # ✅ SeriouslyPrivateChecklist
 
+> [!WARNING]
+> **Alpha phase.** This project has not yet reached acceptable maturity. The features described below are **projected and not yet available**.
+
 A seriously **private**, **serverless** checklist you **share** with a simple link.
 
 📝 No account.

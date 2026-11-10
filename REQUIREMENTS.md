@@ -132,3 +132,4 @@ browser extensions; sync across devices.
 | Canonical host: GitHub Pages at <https://ameuret.github.io/SeriouslyPrivateChecklist/> — activated | owner, after enabling Pages |
 | Sharing is non-destructive for the sender's local list (corrects a draft README claim that sharing would wipe local data) | owner review of README |
 | README documents private-navigation (incognito) guidance and AI-assistance transparency | owner review of README |
+| Project is in **alpha**: top warning banner in README + self-contained `index.html` landing page on GitHub Pages (replaces the 404); projected features marked unavailable | owner request |
