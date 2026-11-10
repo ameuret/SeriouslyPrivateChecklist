@@ -5,7 +5,7 @@
 [![No tracking](https://img.shields.io/badge/tracking-none-success.svg)](#)
 
 > [!WARNING]
-> **Alpha phase.** This project has not yet reached acceptable maturity. The features described below are **projected and not yet available**.
+> **Alpha phase.** This project has not yet reached acceptable maturity. Some features described below are **projected and not yet available**.
 
 A seriously **private**, **serverless** checklist you **share** with a simple link.
 
@@ -81,7 +81,7 @@ Meaning RAM may hold traces even after the window closes, until the process is k
 
 ## A note on URL length
 
-Fragments never hit the server, so server URL limits don't apply. Desktop browsers accept very
+[Fragments](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment) never hit the server, so server URL limits don't apply. Desktop browsers accept very
 long fragments (Chrome/Firefox up to ~2 MB, Safari historically ~64 KB). The real limit is
 **shareability**: many messengers and mail clients truncate links around 2 000–8 000 characters.
 The app compresses the list before encoding (typically −60–70 %) and warns you when a link gets
@@ -94,6 +94,18 @@ Vanilla HTML/CSS/JS, no framework: the URL fragment is the only storage (live
 CompressionStream today; a small compression library may be vendored later under the
 supply-chain policy above), WebCrypto (PBKDF2-SHA-256 → AES-256-GCM) for private links,
 strict CSP, and XSS-safe DOM rendering only.
+
+### Almost satisfactory alternatives with gaps
+
+These tools lacked **serverless sharing** and **markdown view**.
+
+That's how this started.
+
+*   **Online Notepad To-Do List**: A browser-based tool that works offline after the first load, features multiple lists, due dates, and **100% private** local storage with JSON backup.
+*   **TodoChecklist**: A privacy-first task manager that is **fully offline** with no accounts, tracking, or cloud sync, storing all data directly in your browser’s local storage.
+*   **Smart To-Do List & Planner (STDLP)**: A lightweight, futuristic HTML-based tool with **zero APIs** or servers, offering priority tags, status filters, and a daily planner mode.
+*   **JEEiEE Todo**: A free online tool with **no login required**, featuring focus timers, recurring tasks, and local storage via IndexedDB for maximum privacy.
+*   **Quick Todo List**: A fast, registration-free browser app that supports drag-and-drop, grouping, and JSON backups, working offline after the initial load.
 
 ## Contributing
 
