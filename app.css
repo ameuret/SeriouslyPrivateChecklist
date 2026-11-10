@@ -1,0 +1,49 @@
+.toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+.toolbar input[type="text"] {
+  flex: 1 1 14rem; padding: 0.45rem 0.6rem;
+  border: 1px solid #c8ced6; border-radius: 6px; background: #fff; color: inherit;
+}
+button {
+  padding: 0.45rem 0.8rem; border: 1px solid #c8ced6; border-radius: 6px;
+  background: #eaeef2; color: inherit; cursor: pointer;
+}
+button:hover:not(:disabled) { filter: brightness(0.95); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.length { font-size: 0.85rem; margin: 0.4rem 0; }
+.length.ok { color: #2da44e; }
+.length.warn { color: #9a6700; }
+.length.error { color: #cf222e; }
+.status { min-height: 1.2em; font-size: 0.9rem; }
+.status.ok { color: #2da44e; }
+.status.warn { color: #9a6700; }
+.status.error { color: #cf222e; }
+.checklist { list-style: none; padding: 0; margin: 1rem 0; }
+.checklist li { display: flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0; border-bottom: 1px solid #e3e7ec; }
+.checklist li h2, .checklist li h3, .checklist li h4,
+.checklist li h5, .checklist li h6 { border-bottom: none; margin: 0.6rem 0 0.2rem; flex-basis: 100%; }
+.checklist li.task label { display: flex; align-items: center; gap: 0.5rem; flex: 1; cursor: pointer; }
+.checklist li.text-line, .checklist li.empty { color: #57606a; border-bottom: none; }
+.task-text { flex: 1; }
+li.done .task-text { text-decoration: line-through; opacity: 0.75; }
+.row-btn { padding: 0.1rem 0.45rem; font-size: 0.8rem; }
+#raw {
+  width: 100%; min-height: 16rem; margin-top: 1rem; padding: 0.6rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9rem;
+  border: 1px solid #c8ced6; border-radius: 6px; background: #fff; color: inherit;
+}
+.pass-panel {
+  margin-top: 1rem; padding: 0.8rem; border: 1px solid #c8ced6; border-radius: 8px;
+  display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+}
+.pass-panel p { margin: 0; flex-basis: 100%; }
+.pass-panel input { padding: 0.45rem 0.6rem; border: 1px solid #c8ced6; border-radius: 6px; background: #fff; color: inherit; }
+.hint { font-size: 0.85rem; }
+@media (prefers-color-scheme: dark) {
+  .toolbar input[type="text"], .pass-panel input, #raw { background: #161b22; border-color: #30363d; }
+  button { background: #21262d; border-color: #30363d; }
+  .checklist li { border-color: #21262d; }
+  .checklist li.text-line, .checklist li.empty { color: #8b949e; }
+  .length.ok, .status.ok { color: #3fb950; }
+  .length.warn, .status.warn { color: #d29922; }
+  .length.error, .status.error { color: #f85149; }
+}
