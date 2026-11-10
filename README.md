@@ -116,7 +116,7 @@ captures the agreed scope, especially what's deliberately out of scope for v1.
 
 This tool is developed by me personally (unless you’re using a git clone or a derivative), with full transparency, partly with the assistance of coding agents.
 
-Such is the present and the future until someone comes from the future to change this. Moral concerns regarding the abuse of benevolent developers having being unsuspecting contributors of LLM trainings are deeply real. It’s a multifaceted issue unlikely to find a practical outcome soon, let’s keep looking for one.
+Such is the present and the future until someone comes from the future to change this. Open source is meant to promote human **entraide** for the greater good, not private interests — which makes it a deeply real moral concern that benevolent developers have unknowingly contributed their work to LLM training data. It’s a multifaceted issue unlikely to find a practical outcome soon, let’s keep looking for one.
 
 ## License
 
