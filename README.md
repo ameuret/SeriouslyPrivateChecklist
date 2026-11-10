@@ -1,5 +1,9 @@
 # ✅ SeriouslyPrivateChecklist
 
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](https://unlicense.org)
+[![Serverless](https://img.shields.io/badge/serverless-100%25-success.svg)](#)
+[![No tracking](https://img.shields.io/badge/tracking-none-success.svg)](#)
+
 > [!WARNING]
 > **Alpha phase.** This project has not yet reached acceptable maturity. The features described below are **projected and not yet available**.
 
@@ -18,11 +22,6 @@ A seriously **private**, **serverless** checklist you **share** with a simple li
 🔀 The address bar is always a complete, ready-to-send copy of your checklist.
 
 🔗 The list lives **only in the URL** — nothing is ever written to cookies or storage on your device.
-
-
-[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](https://unlicense.org)
-[![Serverless](https://img.shields.io/badge/serverless-100%25-success.svg)](#)
-[![No tracking](https://img.shields.io/badge/tracking-none-success.svg)](#)
 
 ## Features
 
