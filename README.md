@@ -14,7 +14,7 @@ A seriously **private**, **serverless** checklist you **share** with a simple li
 
 🔀 The address bar is always a complete, ready-to-send copy of your checklist.
 
-☢️ Optionnally annihilates your locally-stored list as soon as you press the sharing button. Even better than Private Navigation.
+🤝 Sharing never touches your locally-stored list — the URL is a copy, not a move.
 
 
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](https://unlicense.org)
@@ -29,7 +29,7 @@ A seriously **private**, **serverless** checklist you **share** with a simple li
   to any server. Copy the address bar, paste it anywhere, done.
 - 🔒 **Optional private sharing** — encrypt the link with a passphrase (AES-256-GCM via WebCrypto).
   Only people with the passphrase can read the list.
-- 💾 **Autosaves locally** — everything persists in the URL; works fully offline once loaded.
+- 💾 **Autosaves locally** — everything persists in `localStorage` *and* in the URL; works fully offline once loaded.
 - 📏 **URL length awareness** — compressed encoding keeps links short, with warnings if a link
   gets too long for some messengers.
 - 📋 **Export** — copy the list as Markdown or download it as a `.md` file.
@@ -37,8 +37,8 @@ A seriously **private**, **serverless** checklist you **share** with a simple li
 ## How sharing works
 
 ```
-https://<host>/index.html#d1.<base64url(deflate(markdown))>     ← plain share link
-https://<host>/index.html#e1.<base64url(salt‖iv‖AES-256-GCM)>   ← passphrase-encrypted link
+https://ameuret.github.io/SeriouslyPrivateChecklist/#d1.<base64url(deflate(markdown))>     ← plain share link
+https://ameuret.github.io/SeriouslyPrivateChecklist/#e1.<base64url(salt‖iv‖AES-256-GCM)>   ← passphrase-encrypted link
 ```
 
 The `#…` fragment stays in the browser by HTTP design — no server ever sees it.
@@ -51,16 +51,16 @@ Open a link and the list appears; open an encrypted one and you'll be asked for 
 - **Fragments are never transmitted** in HTTP requests — only the page path is.
 - **Optional end-to-end encryption** for links you send (fresh salt + IV per share; the
   passphrase is never stored or sent).
-- **Responsible supply chain defense policy.** Reputable dependencies with update cooldowns.
+- **Minimal supply-chain surface.** Zero runtime dependencies — there is almost nothing to audit or update.
 - **Honest residual risks:**
   - a link can end up in browser history -> use private navigation
-  - a link can linger in your clipboard -> review you OS settings
+  - a link can linger in your clipboard -> review your OS settings
   - a link can leak in a screen share
   - a plain link is readable by anyone who has it
   - private navigation modes are private if used correctly. See below!
   - a forgotten passphrase means the shared copy is **gone for good**.
 
-## On private navigation (aka Incognito) and how to use it securely 
+## On private navigation (aka Incognito) and how to use it securely
 
 ⚠️ The key detail: **the session doesn't end when you close a single tab**.
 
@@ -84,7 +84,32 @@ long fragments (Chrome/Firefox up to ~2 MB, Safari historically ~64 KB). The rea
 The app compresses the list before encoding (typically −60–70 %) and warns you when a link gets
 long — with a one-click "Copy as Markdown" fallback.
 
-Vanilla HTML/CSS/JS, no framework, no runtime dependencies, no `localStorage` for persistence,
+## Run it
+
+It's a static site — no build step, no dependencies:
+
+```bash
+git clone https://github.com/ameuret/SeriouslyPrivateChecklist.git
+cd SeriouslyPrivateChecklist
+# serve the folder with any static server, e.g.:
+python3 -m http.server 8000
+# then open http://localhost:8000
+```
+
+Or use the hosted version on GitHub Pages (free):
+👉 **[ameuret.github.io/SeriouslyPrivateChecklist](https://ameuret.github.io/SeriouslyPrivateChecklist/)**
+(enable it via *Settings → Pages → Deploy from branch: main*).
+Encryption and compression require a secure context (HTTPS or `localhost`).
+
+## Status
+
+📝 **Requirements & design phase** — the full functional and non-functional requirements
+(privacy model, URL-length limits, security, scope) are in
+[**REQUIREMENTS.md**](REQUIREMENTS.md). Implementation follows that document.
+
+## Tech approach
+
+Vanilla HTML/CSS/JS, no framework, no runtime dependencies: `localStorage` for persistence,
 live `history.replaceState` for fragment sync, CompressionStream (deflate) + base64url for
 encoding, WebCrypto (PBKDF2-SHA-256 → AES-256-GCM) for private links, strict CSP, and
 XSS-safe DOM rendering only.

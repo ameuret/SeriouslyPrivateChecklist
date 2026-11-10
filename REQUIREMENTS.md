@@ -44,7 +44,7 @@ storage, no tracking.
 | F2 | Markdown is the source of truth | Ticking a box rewrites the underlying line from `- [ ]` to `- [x]` (and back). Users can view/edit the raw Markdown directly. |
 | F3 | Basic editing | Add item, delete item, reorder items (move up/down). Every change updates the Markdown. |
 | F4 | Local persistence | Every change is autosaved to `localStorage`. On load with an empty fragment, the saved list is restored. |
-| F5 | Live fragment sync | The URL fragment always reflects the current list (via `history.replaceState`, no history spam). Copying the address bar always yields a working share link. |
+| F5 | Live fragment sync | The URL fragment always reflects the current list (via `history.replaceState`, no history spam). Copying the address bar always yields a working share link. Generating or sharing a link is **non-destructive**: it never deletes or alters the locally stored list. |
 | F6 | Open a shared link | Opening a URL with a fragment loads that list (fragment takes precedence) and saves it locally. |
 | F7 | Share privately | "Share privately" prompts for a passphrase, encrypts the Markdown (PBKDF2-SHA-256, ≥ 600 000 iterations, random 16-byte salt, random 12-byte IV, AES-256-GCM), and puts `#e1.<base64url(salt‖iv‖ciphertext)>` in the fragment. Recipients are prompted for the passphrase; a wrong passphrase yields a clear error and no partial output. |
 | F8 | Plain share format | Plain links use `#d1.<base64url(deflate-raw(markdown))>` (compressed with the CompressionStream API before encoding to keep URLs short). The `d1`/`e1` prefixes version the format. |
@@ -65,11 +65,16 @@ storage, no tracking.
 - **N4 — Threat-model honesty:** the README must state the residual risks: the link can appear
   in browser history, clipboard, screen shares, and shoulder surfing; a shared plain link is
   readable by anyone who has it; a forgotten passphrase means the shared copy is unrecoverable.
+  The README also documents mitigation guidance for private/incognito navigation (the session
+  ends only when ALL private windows and tabs are closed; RAM traces may persist afterwards),
+  plus clipboard hygiene and screen-share awareness.
 
 ### 5.2 Economy
 
-- **N5 — Zero marginal cost:** hostable on any static host, e.g. the free GitHub Pages tier.
-  No build step, no runtime dependencies, no paid services.
+- **N5 — Zero marginal cost:** hostable on any static host. Canonical deployment target is the
+  free GitHub Pages tier at <https://ameuret.github.io/SeriouslyPrivateChecklist/> (enable via
+  *Settings → Pages → Deploy from branch: main*). No build step, no runtime dependencies
+  (minimal supply-chain surface), no paid services.
 
 ### 5.3 Security
 
@@ -111,5 +116,17 @@ browser extensions; sync across devices.
 ## 7. Open risks
 
 - Long lists shared through truncating messengers → mitigated by F8 compression + F9 warnings + F10 Markdown fallback.
-- Opening a shared link overwrites the recipient's locally saved list → v1 behavior is "fragment wins"; documented in the README, revisit (merge/diff prompt) if users ask.
+- Opening a shared link overwrites the recipient's locally saved list → v1 behavior is "fragment wins"; documented in the README, revisit (merge/diff prompt) if users ask. The share action itself is always non-destructive for the sender (F5).
 - Passphrase loss → unrecoverable by design; documented.
+
+## 8. Decision log
+
+| Decision | Source |
+|---|---|
+| Hybrid storage: `localStorage` autosave + live URL-fragment sync | owner interview |
+| Passphrase encryption is optional, not mandatory | owner interview |
+| The Markdown document is the literal source of truth | owner interview |
+| v1 scope: single-document checklist; no accounts, reminders, or multiple named lists | owner interview |
+| Canonical host: GitHub Pages at <https://ameuret.github.io/SeriouslyPrivateChecklist/> | owner review of README |
+| Sharing is non-destructive for the sender's local list (corrects a draft README claim that sharing would wipe local data) | owner review of README |
+| README documents private-navigation (incognito) guidance and AI-assistance transparency | owner review of README |
