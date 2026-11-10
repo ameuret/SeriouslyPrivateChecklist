@@ -1,9 +1,21 @@
 # ✅ SeriouslyPrivateChecklist
 
-**A seriously private, serverless checklist you share with a link.**
+A seriously **private**, **serverless** checklist you **share** with a simple link.
 
-No account. No server. No tracking. Your list lives in your browser and in the URL itself —
-so the address bar is always a complete, ready-to-send copy of your checklist.
+📝 No account.
+
+🌐 No server.
+
+🛜 No tracking.
+
+——
+
+🧘‍♀️ Your list lives in your browser, in the URL itself
+
+🔀 The address bar is always a complete, ready-to-send copy of your checklist.
+
+☢️ Optionnally annihilates your locally-stored list as soon as you press the sharing button. Even better than Private Navigation.
+
 
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](https://unlicense.org)
 [![Serverless](https://img.shields.io/badge/serverless-100%25-success.svg)](#)
@@ -17,7 +29,7 @@ so the address bar is always a complete, ready-to-send copy of your checklist.
   to any server. Copy the address bar, paste it anywhere, done.
 - 🔒 **Optional private sharing** — encrypt the link with a passphrase (AES-256-GCM via WebCrypto).
   Only people with the passphrase can read the list.
-- 💾 **Autosaves locally** — everything persists in `localStorage`; works fully offline once loaded.
+- 💾 **Autosaves locally** — everything persists in the URL; works fully offline once loaded.
 - 📏 **URL length awareness** — compressed encoding keeps links short, with warnings if a link
   gets too long for some messengers.
 - 📋 **Export** — copy the list as Markdown or download it as a `.md` file.
@@ -39,9 +51,30 @@ Open a link and the list appears; open an encrypted one and you'll be asked for 
 - **Fragments are never transmitted** in HTTP requests — only the page path is.
 - **Optional end-to-end encryption** for links you send (fresh salt + IV per share; the
   passphrase is never stored or sent).
-- **Honest residual risks:** a link can end up in browser history, your clipboard, or a screen
-  share; a plain link is readable by anyone who has it; a forgotten passphrase means the shared
-  copy is gone for good.
+- **Responsible supply chain defense policy.** Reputable dependencies with update cooldowns.
+- **Honest residual risks:**
+  - a link can end up in browser history -> use private navigation
+  - a link can linger in your clipboard -> review you OS settings
+  - a link can leak in a screen share
+  - a plain link is readable by anyone who has it
+  - private navigation modes are private if used correctly. See below!
+  - a forgotten passphrase means the shared copy is **gone for good**.
+
+## On private navigation (aka Incognito) and how to use it securely 
+
+⚠️ The key detail: **the session doesn't end when you close a single tab**.
+
+It ends only when **ALL** private windows and tabs are closed.
+
+Until then:
+ - The in-memory **history** list persists (yes, even of closed tabs!)
+ - Cookies and site data for the session remain active
+ - Multiple private tabs/windows share the same session state 
+ 
+Wikipedia also notes a subtler issue:
+
+*"Data erasure by the browser alone is found to be insufficient. For example, the records of visited websites during the private session can be retained in memory for a long time even after the private session is closed."*
+Meaning RAM may hold traces even after the window closes, until the process is killed or memory is reused. 
 
 ## A note on URL length
 
@@ -51,30 +84,7 @@ long fragments (Chrome/Firefox up to ~2 MB, Safari historically ~64 KB). The rea
 The app compresses the list before encoding (typically −60–70 %) and warns you when a link gets
 long — with a one-click "Copy as Markdown" fallback.
 
-## Run it
-
-It's a static site — no build step, no dependencies:
-
-```bash
-git clone https://github.com/ameuret/SeriouslyPrivateChecklist.git
-cd SeriouslyPrivateChecklist
-# serve the folder with any static server, e.g.:
-python3 -m http.server 8000
-# then open http://localhost:8000
-```
-
-Or deploy the folder to any static host (GitHub Pages works out of the box, free).
-Encryption and compression require a secure context (HTTPS or `localhost`).
-
-## Status
-
-📝 **Requirements & design phase** — the full functional and non-functional requirements
-(privacy model, URL-length limits, security, scope) are in
-[**REQUIREMENTS.md**](REQUIREMENTS.md). Implementation follows that document.
-
-## Tech approach
-
-Vanilla HTML/CSS/JS, no framework, no runtime dependencies: `localStorage` for persistence,
+Vanilla HTML/CSS/JS, no framework, no runtime dependencies, no `localStorage` for persistence,
 live `history.replaceState` for fragment sync, CompressionStream (deflate) + base64url for
 encoding, WebCrypto (PBKDF2-SHA-256 → AES-256-GCM) for private links, strict CSP, and
 XSS-safe DOM rendering only.
@@ -83,6 +93,12 @@ XSS-safe DOM rendering only.
 
 Ideas, issues and PRs welcome. Please read [REQUIREMENTS.md](REQUIREMENTS.md) first — it
 captures the agreed scope, especially what's deliberately out of scope for v1.
+
+## AI or no AI
+
+This tool is developed by me personally (unless you’re using a git clone or a derivative), with full transparency, partly with the assistance of coding agents.
+
+Such is the present and the future until someone comes from the future to change this. Moral concerns regarding the abuse of benevolent developers having being unsuspecting contributors of LLM trainings are deeply real. It’s a multifaceted issue unlikely to find a practical outcome soon, let’s keep looking for one.
 
 ## License
 
