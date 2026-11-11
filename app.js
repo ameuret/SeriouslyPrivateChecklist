@@ -110,6 +110,31 @@ function replaceLine(markdown, index, newRaw) {
   return lines.join('\n');
 }
 
+function getTitle(markdown) {
+  for (const line of parseMarkdown(markdown)) {
+    if (line.type === 'heading' && line.level === 1) return line.text;
+  }
+  return '';
+}
+
+function setTitle(markdown, title) {
+  const clean = title.replace(/\s+/g, ' ').trim();
+  const lines = markdown.split('\n');
+  const index = lines.findIndex((l) => /^#\s+/.test(l));
+  if (!clean) {
+    if (index === -1) return markdown;
+    lines.splice(index, 1);
+    return lines.join('\n');
+  }
+  const heading = '# ' + clean;
+  if (index === -1) {
+    if (!lines.some((l) => l.trim())) return heading;
+    return heading + '\n\n' + lines.join('\n');
+  }
+  lines[index] = heading;
+  return lines.join('\n');
+}
+
 function moveLine(markdown, index, delta) {
   const lines = markdown.split('\n');
   const j = index + delta;
@@ -143,7 +168,7 @@ if (typeof module !== 'undefined' && module.exports) {
     b64urlEncode, b64urlDecode, compressText, decompressBytes,
     encodePlainFragment, decodePlainPayload, encryptFragment, decryptPayload,
     parseFragment, parseMarkdown, toggleTaskLine, replaceLine, moveLine,
-    removeLine, appendTask, isSupported,
+    removeLine, appendTask, getTitle, setTitle, isSupported,
   };
 }
 
@@ -167,6 +192,10 @@ function initApp() {
   const statusEl = document.getElementById('status');
   const lengthEl = document.getElementById('length');
   const newTaskEl = document.getElementById('new-task');
+  const titleEl = document.getElementById('list-title');
+  const titleInput = document.getElementById('title-input');
+  const editTitleBtn = document.getElementById('edit-title');
+  let titleEditing = false;
   const passPanel = document.getElementById('pass-panel');
   const passInput = document.getElementById('pass-input');
   const passError = document.getElementById('pass-error');
@@ -212,9 +241,14 @@ function initApp() {
   }
 
   function render() {
+    if (!titleEditing) {
+      titleEl.textContent = getTitle(state.markdown) || 'Untitled checklist';
+    }
     listEl.textContent = '';
     const lines = parseMarkdown(state.markdown);
-    if (!lines.some((l) => l.type !== 'text' || l.text.trim() !== '')) {
+    const titleIdx = lines.findIndex((l) => l.type === 'heading' && l.level === 1);
+    if (!lines.some((l, i) =>
+      i !== titleIdx && (l.type !== 'text' || l.text.trim() !== ''))) {
       const li = document.createElement('li');
       li.className = 'empty';
       li.textContent = 'Empty list — add your first item above.';
@@ -222,6 +256,7 @@ function initApp() {
       return;
     }
     lines.forEach((line, index) => {
+      if (index === titleIdx) return;
       if (line.type === 'task') {
         const li = document.createElement('li');
         li.className = 'task' + (line.done ? ' done' : '');
@@ -309,6 +344,35 @@ function initApp() {
   }
   document.getElementById('add-btn').addEventListener('click', addTask);
   newTaskEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') addTask(); });
+
+  function commitTitleEdit(commit) {
+    if (!titleEditing) return;
+    const value = titleInput.value;
+    titleEditing = false;
+    titleInput.hidden = true;
+    titleEl.hidden = false;
+    editTitleBtn.hidden = false;
+    if (commit) {
+      const next = setTitle(state.markdown, value);
+      if (next !== state.markdown) setMarkdown(next);
+    }
+  }
+  function beginTitleEdit() {
+    if (titleEditing) return;
+    titleEditing = true;
+    titleEl.hidden = true;
+    editTitleBtn.hidden = true;
+    titleInput.hidden = false;
+    titleInput.value = getTitle(state.markdown);
+    titleInput.focus();
+    titleInput.select();
+  }
+  editTitleBtn.addEventListener('click', beginTitleEdit);
+  titleInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') commitTitleEdit(true);
+    else if (e.key === 'Escape') commitTitleEdit(false);
+  });
+  titleInput.addEventListener('blur', () => commitTitleEdit(true));
 
   document.getElementById('copy-link').addEventListener('click', async () => {
     await syncFragment();
