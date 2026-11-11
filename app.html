@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'">
+<title>✅ SeriouslyPrivateChecklist — app (alpha)</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="banner" role="alert">
+  ⚠️ <strong>Alpha.</strong> Work in progress — the list lives only in this URL.
+</div>
+<main>
+  <h1>✅ SeriouslyPrivateChecklist</h1>
+  <p class="tagline">Your list lives <strong>only in this URL</strong> — copy the address bar to share it.
+  Nothing is stored on your device: no cookies, no localStorage.</p>
+
+  <div class="toolbar">
+    <input id="new-task" type="text" placeholder="Add an item and press Enter" aria-label="New item">
+    <button id="add-btn" type="button">Add</button>
+    <button id="copy-link" type="button">🔗 Copy link</button>
+    <button id="share-private" type="button">🔒 Share privately</button>
+    <button id="copy-md" type="button">📋 Copy Markdown</button>
+    <button id="download-md" type="button">⬇️ .md</button>
+    <button id="edit-md" type="button">✏️ Edit Markdown</button>
+  </div>
+
+  <div id="length" class="length ok" aria-live="polite"></div>
+  <div id="status" class="status" aria-live="polite"></div>
+
+  <ul id="list" class="checklist"></ul>
+  <textarea id="raw" hidden spellcheck="false" aria-label="Raw Markdown editor"></textarea>
+
+  <div id="pass-panel" class="pass-panel" hidden>
+    <p id="pass-title"></p>
+    <input id="pass-input" type="password" autocomplete="off" aria-label="Passphrase">
+    <button id="pass-ok" type="button">OK</button>
+    <button id="pass-cancel" type="button">Cancel</button>
+    <p id="pass-error" class="status error"></p>
+  </div>
+
+  <p class="hint"><a href="index.html">← About this project</a></p>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
