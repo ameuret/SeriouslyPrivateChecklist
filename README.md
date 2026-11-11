@@ -28,7 +28,8 @@ A seriously **private**, **serverless** checklist you **share** with a simple li
 - ✅ **Markdown task lists** — your checklist *is* Markdown: `- [ ] buy milk` → `- [x] buy milk`.
   Tick a box and the Markdown updates; edit the raw Markdown directly whenever you want.
 - 🔗 **Share by URL** — the list is encoded into the URL fragment (`#…`), which is never sent
-  to any server. Copy the address bar, paste it anywhere, done.
+  to any server. Copy the address bar, paste it anywhere, done. On mobile devices the app shows
+  a native 📤 **Share** button (Web Share API) instead of Copy link.
 - 🔒 **Optional private sharing** — encrypt the link with a passphrase (AES-256-GCM via WebCrypto).
   Only people with the passphrase can read the list.
 - 🌐 **Lives in the URL** — the fragment is the only storage; nothing touches cookies or localStorage; works fully offline once loaded.

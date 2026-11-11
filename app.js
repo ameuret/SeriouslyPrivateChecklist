@@ -137,13 +137,19 @@ function isSupported() {
     typeof crypto !== 'undefined' && crypto.subtle;
 }
 
+function canUseNativeShare(nav) {
+  if (!nav || typeof nav.share !== 'function') return false;
+  if (typeof nav.maxTouchPoints === 'number' && nav.maxTouchPoints > 0) return true;
+  return typeof nav.userAgent === 'string' && /Android|iPhone|iPad|iPod|Mobile/i.test(nav.userAgent);
+}
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     FRAGMENT_PLAIN, FRAGMENT_ENC, SOFT_LIMIT, HARD_LIMIT,
     b64urlEncode, b64urlDecode, compressText, decompressBytes,
     encodePlainFragment, decodePlainPayload, encryptFragment, decryptPayload,
     parseFragment, parseMarkdown, toggleTaskLine, replaceLine, moveLine,
-    removeLine, appendTask, isSupported,
+    removeLine, appendTask, isSupported, canUseNativeShare,
   };
 }
 
@@ -310,8 +316,23 @@ function initApp() {
   document.getElementById('add-btn').addEventListener('click', addTask);
   newTaskEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') addTask(); });
 
-  document.getElementById('copy-link').addEventListener('click', async () => {
+  const copyLinkBtn = document.getElementById('copy-link');
+  const nativeShare = canUseNativeShare(navigator);
+  if (nativeShare) copyLinkBtn.textContent = '📤 Share';
+  copyLinkBtn.addEventListener('click', async () => {
     await syncFragment();
+    if (nativeShare) {
+      try {
+        await navigator.share({
+          title: document.title,
+          text: 'SeriouslyPrivateChecklist — your list lives in this link',
+          url: location.href,
+        });
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return;
+      }
+    }
     try {
       await navigator.clipboard.writeText(location.href);
       showStatus('Link copied — it contains the whole list.', 'ok');
