@@ -38,6 +38,7 @@ li.done .task-text { text-decoration: line-through; opacity: 0.75; }
 .pass-panel p { margin: 0; flex-basis: 100%; }
 .pass-panel input { padding: 0.45rem 0.6rem; border: 1px solid #c8ced6; border-radius: 6px; background: #fff; color: inherit; }
 .hint { font-size: 0.85rem; }
+.commit-ref { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; opacity: 0.55; }
 @media (prefers-color-scheme: dark) {
   .toolbar input[type="text"], .pass-panel input, #raw { background: #161b22; border-color: #30363d; }
   button { background: #21262d; border-color: #30363d; }

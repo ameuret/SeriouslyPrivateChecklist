@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE = 'spc-v1';
+const CACHE = 'spc-v2';
 const ASSETS = ['./', './index.html', './app.html', './style.css', './app.css', './app.js'];
 
 self.addEventListener('install', (e) => {
@@ -20,10 +20,10 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
-    caches.match(e.request).then((hit) => hit || fetch(e.request).then((res) => {
+    fetch(e.request).then((res) => {
       const copy = res.clone();
       caches.open(CACHE).then((c) => c.put(e.request, copy));
       return res;
-    }))
+    }).catch(() => caches.match(e.request))
   );
 });
