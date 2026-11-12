@@ -1,0 +1,21 @@
+{
+  "name": "seriously-private-checklist",
+  "version": "1.0.0",
+  "description": "A seriously private, serverless checklist — the fragment is the only storage.",
+  "private": true,
+  "scripts": {
+    "test": "playwright test"
+  },
+  "engines": {
+    "node": ">=20",
+    "npm": ">=11.4.2"
+  },
+  "license": "Unlicense",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ameuret/SeriouslyPrivateChecklist.git"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0"
+  }
+}

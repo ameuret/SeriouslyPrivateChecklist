@@ -112,6 +112,29 @@ That's how this started.
 Ideas, issues and PRs welcome. Please read [REQUIREMENTS.md](REQUIREMENTS.md) first — it
 captures the agreed scope, especially what's deliberately out of scope for v1.
 
+### Testing
+
+The UI is covered by Playwright end-to-end tests driving your **system Chromium** — no
+browser download, no framework, no third-party services.
+
+Requirements: Node ≥ 20 and npm ≥ 11.4.2 (enforced via `engines` + `engine-strict`).
+
+```bash
+npm ci        # installs exactly what package-lock.json pins
+npm test      # serves the app on localhost and runs tests/e2e/
+```
+
+Failures come with a screenshot and a Playwright trace under `test-results/`
+(`npx playwright show-trace test-results/<dir>/trace.zip` to replay one interactively).
+
+### Dependency update policy (supply-chain cooldown)
+
+`package-lock.json` is the source of truth for what gets installed — `npm ci` never
+" drifts. When updating a dependency, **do not adopt a release younger than 7 days**:
+fresh releases sometimes get roll-backed or amended, and cooldowns let the community
+catch supply-chain attacks first. Check the publish date on
+[www.npmjs.com](https://www.npmjs.com) or `npm view <package> time` before bumping.
+
 ## AI or no AI
 
 This tool is developed by me personally (unless you’re using a git clone or a derivative), with full transparency, partly with the assistance of coding agents.
