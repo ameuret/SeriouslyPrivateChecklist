@@ -117,7 +117,7 @@ captures the agreed scope, especially what's deliberately out of scope for v1.
 The UI is covered by Playwright end-to-end tests driving your **system Chromium** — no
 browser download, no framework, no third-party services.
 
-Requirements: Node ≥ 20 and npm ≥ 11.4.2 (enforced via `engines` + `engine-strict`).
+Requirements: Node ≥ 20 and npm ≥ 11.21.2 (enforced via `engines` + `engine-strict`).
 
 ```bash
 npm ci        # installs exactly what package-lock.json pins
@@ -130,10 +130,21 @@ Failures come with a screenshot and a Playwright trace under `test-results/`
 ### Dependency update policy (supply-chain cooldown)
 
 `package-lock.json` is the source of truth for what gets installed — `npm ci` never
-" drifts. When updating a dependency, **do not adopt a release younger than 7 days**:
-fresh releases sometimes get roll-backed or amended, and cooldowns let the community
-catch supply-chain attacks first. Check the publish date on
-[www.npmjs.com](https://www.npmjs.com) or `npm view <package> time` before bumping.
+drifts, and new installs are **mechanically blocked by a 7-day release cooldown**:
+`.npmrc` sets `min-release-age=7`, so npm refuses to resolve any version published
+less than 7 days ago. Fresh releases are sometimes rolled back or amended; the
+cool-down window lets the community surface supply-chain attacks before this
+project adopts them.
+
+Practical consequences:
+
+- `npm update`, `npm install <pkg>@latest` and `npm audit fix` only ever pick
+  releases older than 7 days. If a security fix is blocked by the window, npm
+  keeps the vulnerable version and warns — verify the fix is real and current,
+  then temporarily exempt the package with `min-release-age-exclude=<pkg>` in
+  `.npmrc` until it ages out.
+- Bumping a dependency is a deliberate lockfile change — do it in its own commit
+  so supply-chain changes stay reviewable (see the policy in Privacy guarantees).
 
 ## AI or no AI
 
