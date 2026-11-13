@@ -118,7 +118,7 @@ browser extensions; sync across devices.
 ## 7. Open risks
 
 - Long lists shared through truncating messengers → mitigated by F8 compression + F9 warnings + F10 Markdown fallback.
-- URL-only storage means closing the tab without copying the link loses the list → mitigated by the always-visible address bar and a persistent "Copy link" action; documented in the README.
+- URL-only storage means closing the tab without copying the link loses the list → mitigated by the always-visible address bar and a persistent share action ("Share" via the Web Share API on mobile devices, "Copy link" elsewhere); documented in the README.
 - Passphrase loss → unrecoverable by design; documented.
 
 ## 8. Decision log

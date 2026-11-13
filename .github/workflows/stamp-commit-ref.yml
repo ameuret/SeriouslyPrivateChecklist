@@ -1,0 +1,33 @@
+name: Stamp deployed commit
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stamp-commit-ref-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  stamp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stamp short commit ref in app.html
+        run: |
+          SHA=$(git rev-parse --short HEAD)
+          sed -i -E "s|(<span class=\"commit-ref\" title=\"Deployed commit\">)[^<]*(</span>)|\1${SHA}\2|" app.html
+          git diff --exit-code --quiet app.html && echo "Stamp already up to date" || echo "Stamped ${SHA}"
+
+      - name: Commit and push stamp
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.html
+          git commit -m "chore: stamp deployed commit $(git rev-parse --short HEAD) [skip ci]" || echo "Nothing to commit"
+          git push
