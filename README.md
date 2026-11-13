@@ -85,7 +85,8 @@ Meaning RAM may hold traces even after the window closes, until the process is k
 [Fragments](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment) never hit the server, so server URL limits don't apply. Desktop browsers accept very
 long fragments (Chrome/Firefox up to ~2 MB, Safari historically ~64 KB). The real limit is
 **shareability**: many messengers and mail clients truncate links around 2 000–8 000 characters.
-The app compresses the list before encoding (typically −60–70 %) and warns you when a link gets
+The app compresses the list before encoding (DEFLATE: measured −37% on a realistic
+15-item list, larger/repetitive lists compress better) and warns you when a link gets
 long — with a one-click "Copy as Markdown" fallback.
 
 ## Tech approach
@@ -112,6 +113,40 @@ That's how this started.
 
 Ideas, issues and PRs welcome. Please read [REQUIREMENTS.md](REQUIREMENTS.md) first — it
 captures the agreed scope, especially what's deliberately out of scope for v1.
+
+### Testing
+
+The UI is covered by Playwright end-to-end tests driving your **system Chromium** — no
+browser download, no framework, no third-party services.
+
+Requirements: Node ≥ 20 and npm ≥ 11.21.2 (enforced via `engines` + `engine-strict`).
+
+```bash
+npm ci        # installs exactly what package-lock.json pins
+npm test      # serves the app on localhost and runs tests/e2e/
+```
+
+Failures come with a screenshot and a Playwright trace under `test-results/`
+(`npx playwright show-trace test-results/<dir>/trace.zip` to replay one interactively).
+
+### Dependency update policy (supply-chain cooldown)
+
+`package-lock.json` is the source of truth for what gets installed — `npm ci` never
+drifts, and new installs are **mechanically blocked by a 7-day release cooldown**:
+`.npmrc` sets `min-release-age=7`, so npm refuses to resolve any version published
+less than 7 days ago. Fresh releases are sometimes rolled back or amended; the
+cool-down window lets the community surface supply-chain attacks before this
+project adopts them.
+
+Practical consequences:
+
+- `npm update`, `npm install <pkg>@latest` and `npm audit fix` only ever pick
+  releases older than 7 days. If a security fix is blocked by the window, npm
+  keeps the vulnerable version and warns — verify the fix is real and current,
+  then temporarily exempt the package with `min-release-age-exclude=<pkg>` in
+  `.npmrc` until it ages out.
+- Bumping a dependency is a deliberate lockfile change — do it in its own commit
+  so supply-chain changes stay reviewable (see the policy in Privacy guarantees).
 
 ## AI or no AI
 
