@@ -90,6 +90,21 @@ IDs map to the functional requirements in [REQUIREMENTS.md](REQUIREMENTS.md).
 - When the fragment passes ~2 000 then ~8 000 chars
 - Then the indicator warns, then errors — while the list keeps working locally.
 
+# Deployed commit reference (F13)
+
+- Given the app deployed from main
+- When the page loads
+- Then a discrete short commit ref (`<span class="commit-ref">`) is visible at the
+  bottom of the page.
+
+# Service worker caching (F14, planned — infra)
+
+- Given a browser that previously loaded the app
+- When the service worker activates with the current sw.js
+- Then the stale cache is purged on activate
+- And caching becomes network-first with a cache fallback.
+
+
 # Offline operation (F11)
 
 - Given the page loaded once

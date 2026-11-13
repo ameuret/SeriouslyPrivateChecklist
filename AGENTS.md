@@ -28,6 +28,17 @@ code that implements it.
   must be rewritten, pick a new branch name (e.g. `feat/<slug>-v2`) to make that
   explicit.
 
+## Merge discipline
+
+- One unit of work = one branch = one PR. Branch from the current `main` tip, never
+  from another feature branch.
+- Always open a PR, even when working solo — the PR is the review checkpoint: the
+  branch holds the work, `main` stays releasable, one click merges.
+- Squash-merge feature branches into `main` (linear history, no merge bubbles).
+- Never force-push shared branches (`main`, shared feature branches). If history
+  must be rewritten, pick a new branch name (e.g. `feat/<slug>-v2`) to make that
+  explicit.
+
 ## Git workflow
 
 - **Never start working on `main`.** Always branch: one feature = one branch.
