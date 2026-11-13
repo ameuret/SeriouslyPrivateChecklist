@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE = 'spc-v1';
+const CACHE = 'spc-v2';
 const ASSETS = ['./', './index.html', './app.html', './style.css', './app.css', './app.js'];
 
 self.addEventListener('install', (e) => {
